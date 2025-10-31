@@ -1,73 +1,89 @@
-# Welcome to your Lovable project
+# Vite React Shadcn TypeScript
 
-## Project info
+A modern e-commerce website built with Vite, React, TypeScript, and Shadcn UI.
 
-**URL**: https://lovable.dev/projects/d0cffbc3-15ef-4ef9-beab-dd1617a29993
+## Development
 
-## How can I edit this code?
+Run the development server:
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/d0cffbc3-15ef-4ef9-beab-dd1617a29993) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:5000`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Building for Production
 
-**Use GitHub Codespaces**
+Build the application:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+npm run build
+```
 
-## What technologies are used for this project?
+Preview the production build:
 
-This project is built with:
+```bash
+npm run preview
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deploying to GitHub Pages
 
-## How can I deploy this project?
+This project is configured to automatically deploy to GitHub Pages when you push to the `main` branch.
 
-Simply open [Lovable](https://lovable.dev/projects/d0cffbc3-15ef-4ef9-beab-dd1617a29993) and click on Share -> Publish.
+### Setup Instructions:
 
-## Can I connect a custom domain to my Lovable project?
+1. Go to your GitHub repository settings
+2. Navigate to "Pages" in the sidebar
+3. Under "Build and deployment", select "GitHub Actions" as the source
+4. Push your code to the `main` branch
+5. The GitHub Action will automatically build and deploy your site
 
-Yes, you can!
+### Manual Deployment:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+To build for GitHub Pages manually:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```bash
+npm run deploy
+```
+
+This will create a production build in the `dist` folder that you can upload to GitHub Pages.
+
+## Configuration
+
+The Vite configuration is set up for GitHub Pages deployment with:
+- Base URL: `/` (root directory)
+- Build output: `dist` folder
+- Server host: `0.0.0.0` (allows external connections)
+- Server port: `5000`
+
+## Project Structure
+
+```
+src/
+├── assets/          # Images and static assets
+├── components/      # React components
+│   └── ui/         # Shadcn UI components
+├── hooks/          # Custom React hooks
+├── lib/            # Utility functions
+├── pages/          # Page components
+├── App.tsx         # Main App component
+├── main.tsx        # Application entry point
+└── index.css       # Global styles
+```
+
+## Technologies
+
+- **Vite** - Fast build tool and dev server
+- **React** - UI library
+- **TypeScript** - Type-safe JavaScript
+- **Shadcn UI** - Component library
+- **Tailwind CSS** - Utility-first CSS framework
+- **React Router** - Client-side routing
+- **TanStack Query** - Data fetching and caching
+
+## Original Project Info
+
+This project was originally created with Lovable.
+
+**Original URL**: https://lovable.dev/projects/d0cffbc3-15ef-4ef9-beab-dd1617a29993
