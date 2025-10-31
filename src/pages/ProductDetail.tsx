@@ -4,48 +4,32 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Star, ShoppingCart, Heart, Truck, Shield, ArrowLeft } from "lucide-react";
-import headphonesImg from "@/assets/products/headphones.jpg";
-import smartwatchImg from "@/assets/products/smartwatch.jpg";
-import bluetoothSpeakerImg from "@/assets/products/bluetooth-speaker.jpg";
-import phoneCaseImg from "@/assets/products/phone-case.jpg";
+import { getProductById, products } from "@/lib/products";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const { addToCart } = useCart();
+  const { toast } = useToast();
 
-  // Mock product data
-  const product = {
-    id: id || "1",
-    name: "Premium Wireless Headphones",
-    price: 79.99,
-    originalPrice: 99.99,
-    rating: 4.5,
-    reviews: 128,
-    image: headphonesImg,
-    category: "Electronics",
-    inStock: true,
-    description: "Experience crystal-clear audio with our premium wireless headphones. Featuring advanced noise cancellation, 30-hour battery life, and comfortable over-ear design.",
-    features: [
-      "Active Noise Cancellation",
-      "30-hour battery life",
-      "Bluetooth 5.0 connectivity",
-      "Comfortable over-ear design",
-      "Built-in microphone",
-      "Foldable and portable",
-    ],
-    specifications: {
-      "Brand": "AudioPro",
-      "Model": "AP-2000",
-      "Color": "Black",
-      "Weight": "250g",
-      "Warranty": "2 years",
-    },
+  const product = getProductById(Number(id)) || products[0];
+
+  const relatedProducts = products
+    .filter((p) => p.category === product.category && p.id !== product.id)
+    .slice(0, 3);
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast({
+      title: "Added to cart",
+      description: `${product.name} has been added to your cart`,
+    });
   };
 
-  const relatedProducts = [
-    { id: 2, name: "Smart Watch", price: 199.99, image: smartwatchImg },
-    { id: 8, name: "Bluetooth Speaker", price: 59.99, image: bluetoothSpeakerImg },
-    { id: 12, name: "Phone Case", price: 29.99, image: phoneCaseImg },
-  ];
+  const discount = product.originalPrice 
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -98,21 +82,30 @@ const ProductDetail = () => {
               </div>
 
               <div className="flex items-baseline gap-4 mb-6">
-                <span className="text-4xl font-bold text-primary">${product.price}</span>
-                <span className="text-xl text-muted-foreground line-through">
-                  ${product.originalPrice}
-                </span>
-                <Badge variant="destructive">Save 20%</Badge>
+                <span className="text-4xl font-bold text-primary" data-testid="text-product-price">${product.price}</span>
+                {product.originalPrice && (
+                  <>
+                    <span className="text-xl text-muted-foreground line-through">
+                      ${product.originalPrice}
+                    </span>
+                    <Badge variant="destructive">Save {discount}%</Badge>
+                  </>
+                )}
               </div>
 
-              <p className="text-muted-foreground mb-6">{product.description}</p>
+              <p className="text-muted-foreground mb-6" data-testid="text-product-description">{product.description}</p>
 
               <div className="flex gap-4 mb-6">
-                <Button size="lg" className="flex-1">
+                <Button 
+                  size="lg" 
+                  className="flex-1"
+                  onClick={handleAddToCart}
+                  data-testid="button-add-to-cart"
+                >
                   <ShoppingCart className="mr-2 h-5 w-5" />
                   Add to Cart
                 </Button>
-                <Button size="lg" variant="outline">
+                <Button size="lg" variant="outline" data-testid="button-wishlist">
                   <Heart className="h-5 w-5" />
                 </Button>
               </div>

@@ -3,9 +3,11 @@ import { ShoppingCart, Search, User, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useCart } from "@/contexts/CartContext";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
+  const { getCartCount } = useCart();
   
   const navLinks = [
     { path: "/", label: "Home" },
@@ -58,11 +60,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               </Button>
               
               <Link to="/cart">
-                <Button size="icon" variant="ghost" className="relative">
+                <Button size="icon" variant="ghost" className="relative" data-testid="button-cart">
                   <ShoppingCart className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
-                    0
-                  </span>
+                  {getCartCount() > 0 && (
+                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center" data-testid="text-cart-count">
+                      {getCartCount()}
+                    </span>
+                  )}
                 </Button>
               </Link>
 

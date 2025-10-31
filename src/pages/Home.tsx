@@ -2,12 +2,14 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Package, Truck, Shield } from "lucide-react";
-import headphonesImg from "@/assets/products/headphones.jpg";
-import smartwatchImg from "@/assets/products/smartwatch.jpg";
-import backpackImg from "@/assets/products/backpack.jpg";
-import coffeeMakerImg from "@/assets/products/coffee-maker.jpg";
+import { products } from "@/lib/products";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
 const Home = () => {
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+
   const categories = [
     { name: "Electronics", image: "📱", link: "/categories" },
     { name: "Fashion", image: "👔", link: "/categories" },
@@ -15,12 +17,16 @@ const Home = () => {
     { name: "Sports", image: "⚽", link: "/categories" },
   ];
 
-  const featuredProducts = [
-    { id: 1, name: "Wireless Headphones", price: 79.99, image: headphonesImg },
-    { id: 2, name: "Smart Watch", price: 199.99, image: smartwatchImg },
-    { id: 3, name: "Laptop Backpack", price: 49.99, image: backpackImg },
-    { id: 4, name: "Coffee Maker", price: 89.99, image: coffeeMakerImg },
-  ];
+  const featuredProducts = products.slice(0, 4);
+
+  const handleAddToCart = (product: typeof products[0], e: React.MouseEvent) => {
+    e.preventDefault();
+    addToCart(product);
+    toast({
+      title: "Added to cart",
+      description: `${product.name} has been added to your cart`,
+    });
+  };
 
   return (
     <div className="min-h-screen">
@@ -117,9 +123,9 @@ const Home = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredProducts.map((product) => (
-              <Link key={product.id} to={`/product/${product.id}`}>
-                <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-                  <CardContent className="p-0">
+              <Card key={product.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <CardContent className="p-0">
+                  <Link to={`/product/${product.id}`}>
                     <div className="aspect-square bg-secondary/50 flex items-center justify-center overflow-hidden">
                       <img 
                         src={product.image} 
@@ -127,14 +133,22 @@ const Home = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold mb-2">{product.name}</h3>
-                      <p className="text-2xl font-bold text-primary">${product.price}</p>
-                      <Button className="w-full mt-4">Add to Cart</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
+                  </Link>
+                  <div className="p-4">
+                    <Link to={`/product/${product.id}`}>
+                      <h3 className="font-semibold mb-2 hover:text-primary transition-colors">{product.name}</h3>
+                    </Link>
+                    <p className="text-2xl font-bold text-primary">${product.price}</p>
+                    <Button 
+                      className="w-full mt-4"
+                      onClick={(e) => handleAddToCart(product, e)}
+                      data-testid={`button-add-to-cart-${product.id}`}
+                    >
+                      Add to Cart
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>

@@ -2,34 +2,22 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import headphonesImg from "@/assets/products/headphones.jpg";
-import smartwatchImg from "@/assets/products/smartwatch.jpg";
-import backpackImg from "@/assets/products/backpack.jpg";
-import coffeeMakerImg from "@/assets/products/coffee-maker.jpg";
-import runningShoesImg from "@/assets/products/running-shoes.jpg";
-import yogaMatImg from "@/assets/products/yoga-mat.jpg";
-import deskLampImg from "@/assets/products/desk-lamp.jpg";
-import bluetoothSpeakerImg from "@/assets/products/bluetooth-speaker.jpg";
-import waterBottleImg from "@/assets/products/water-bottle.jpg";
-import sunglassesImg from "@/assets/products/sunglasses.jpg";
-import plantPotImg from "@/assets/products/plant-pot.jpg";
-import phoneCaseImg from "@/assets/products/phone-case.jpg";
+import { products } from "@/lib/products";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
 const Shop = () => {
-  const products = [
-    { id: 1, name: "Wireless Headphones", price: 79.99, category: "Electronics", image: headphonesImg },
-    { id: 2, name: "Smart Watch", price: 199.99, category: "Electronics", image: smartwatchImg },
-    { id: 3, name: "Laptop Backpack", price: 49.99, category: "Fashion", image: backpackImg },
-    { id: 4, name: "Coffee Maker", price: 89.99, category: "Home", image: coffeeMakerImg },
-    { id: 5, name: "Running Shoes", price: 129.99, category: "Sports", image: runningShoesImg },
-    { id: 6, name: "Yoga Mat", price: 34.99, category: "Sports", image: yogaMatImg },
-    { id: 7, name: "Desk Lamp", price: 45.99, category: "Home", image: deskLampImg },
-    { id: 8, name: "Bluetooth Speaker", price: 59.99, category: "Electronics", image: bluetoothSpeakerImg },
-    { id: 9, name: "Water Bottle", price: 24.99, category: "Sports", image: waterBottleImg },
-    { id: 10, name: "Sunglasses", price: 89.99, category: "Fashion", image: sunglassesImg },
-    { id: 11, name: "Plant Pot", price: 19.99, category: "Home", image: plantPotImg },
-    { id: 12, name: "Phone Case", price: 29.99, category: "Electronics", image: phoneCaseImg },
-  ];
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+
+  const handleAddToCart = (product: typeof products[0], e: React.MouseEvent) => {
+    e.preventDefault();
+    addToCart(product);
+    toast({
+      title: "Added to cart",
+      description: `${product.name} has been added to your cart`,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -110,9 +98,9 @@ const Shop = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((product) => (
-                <Link key={product.id} to={`/product/${product.id}`}>
-                  <Card className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-                    <CardContent className="p-0">
+                <Card key={product.id} className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1" data-testid={`card-product-${product.id}`}>
+                  <CardContent className="p-0">
+                    <Link to={`/product/${product.id}`}>
                       <div className="aspect-square bg-secondary/50 flex items-center justify-center overflow-hidden">
                         <img 
                           src={product.image} 
@@ -120,15 +108,23 @@ const Shop = () => {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <div className="p-4">
-                        <div className="text-xs text-muted-foreground mb-2">{product.category}</div>
-                        <h3 className="font-semibold mb-2">{product.name}</h3>
-                        <p className="text-2xl font-bold text-primary mb-4">${product.price}</p>
-                        <Button className="w-full">Add to Cart</Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+                    </Link>
+                    <div className="p-4">
+                      <div className="text-xs text-muted-foreground mb-2">{product.category}</div>
+                      <Link to={`/product/${product.id}`}>
+                        <h3 className="font-semibold mb-2 hover:text-primary transition-colors">{product.name}</h3>
+                      </Link>
+                      <p className="text-2xl font-bold text-primary mb-4">${product.price}</p>
+                      <Button 
+                        className="w-full" 
+                        onClick={(e) => handleAddToCart(product, e)}
+                        data-testid={`button-add-to-cart-${product.id}`}
+                      >
+                        Add to Cart
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>

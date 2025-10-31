@@ -2,66 +2,40 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { products } from "@/lib/products";
 
 const Categories = () => {
-  const categories = [
-    {
-      name: "Electronics",
+  const categoryMap: Record<string, { description: string; color: string }> = {
+    "Electronics": {
       description: "Latest gadgets and technology",
-      image: "📱",
-      productCount: 156,
       color: "from-blue-500 to-cyan-500",
     },
-    {
-      name: "Fashion",
+    "Fashion": {
       description: "Clothing, shoes, and accessories",
-      image: "👔",
-      productCount: 243,
       color: "from-pink-500 to-rose-500",
     },
-    {
-      name: "Home & Garden",
+    "Home": {
       description: "Everything for your home",
-      image: "🏡",
-      productCount: 189,
       color: "from-green-500 to-emerald-500",
     },
-    {
-      name: "Sports & Outdoors",
+    "Sports": {
       description: "Fitness and outdoor gear",
-      image: "⚽",
-      productCount: 134,
       color: "from-orange-500 to-amber-500",
     },
-    {
-      name: "Beauty & Health",
-      description: "Personal care products",
-      image: "💄",
-      productCount: 98,
-      color: "from-purple-500 to-violet-500",
-    },
-    {
-      name: "Books & Media",
-      description: "Books, movies, and music",
-      image: "📚",
-      productCount: 276,
-      color: "from-indigo-500 to-blue-500",
-    },
-    {
-      name: "Toys & Games",
-      description: "Fun for all ages",
-      image: "🎮",
-      productCount: 112,
-      color: "from-red-500 to-pink-500",
-    },
-    {
-      name: "Food & Beverages",
-      description: "Gourmet and everyday items",
-      image: "🍕",
-      productCount: 167,
-      color: "from-yellow-500 to-orange-500",
-    },
-  ];
+  };
+
+  const categories = Object.entries(categoryMap).map(([name, { description, color }]) => {
+    const categoryProducts = products.filter((p) => p.category === name);
+    const featuredProduct = categoryProducts[0];
+    
+    return {
+      name,
+      description,
+      image: featuredProduct?.image,
+      productCount: categoryProducts.length,
+      color,
+    };
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -77,26 +51,34 @@ const Categories = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((category, index) => (
-            <Link key={index} to="/shop">
+            <Link key={index} to="/shop" data-testid={`link-category-${category.name.toLowerCase()}`}>
               <Card className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-2 cursor-pointer group">
                 <CardContent className="p-0">
-                  <div className={`h-32 bg-gradient-to-br ${category.color} flex items-center justify-center text-6xl relative overflow-hidden`}>
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300" />
-                    <span className="relative z-10 transform group-hover:scale-110 transition-transform duration-300">
-                      {category.image}
-                    </span>
+                  <div className={`h-48 bg-gradient-to-br ${category.color} flex items-center justify-center relative overflow-hidden`}>
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+                    {category.image && (
+                      <img 
+                        src={category.image} 
+                        alt={category.name}
+                        className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-70 transition-opacity duration-300"
+                      />
+                    )}
+                    <div className="relative z-10 text-center">
+                      <h3 className="text-2xl font-bold text-white drop-shadow-lg mb-1">
+                        {category.name}
+                      </h3>
+                      <p className="text-sm text-white/90 drop-shadow">
+                        {category.productCount} products
+                      </p>
+                    </div>
                   </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2">{category.name}</h3>
                     <p className="text-sm text-muted-foreground mb-4">
                       {category.description}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        {category.productCount} products
-                      </span>
-                      <Button variant="ghost" size="sm" className="group-hover:text-primary">
-                        Shop <ArrowRight className="ml-1 h-4 w-4" />
+                      <Button variant="ghost" size="sm" className="group-hover:text-primary ml-auto">
+                        Shop Now <ArrowRight className="ml-1 h-4 w-4" />
                       </Button>
                     </div>
                   </div>
